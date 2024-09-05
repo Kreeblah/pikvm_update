@@ -1,0 +1,36 @@
+- name: Check for pikvm-update script
+  ansible.builtin.stat:
+    path: /usr/bin/pikvm-update
+  register: pikvm_update_script_exists
+  vars:
+    ansible_remote_tmp: /tmp
+
+- name: Run pikvm-update script
+  ansible.builtin.raw: /usr/bin/pikvm-update
+  check_mode: false
+  changed_when: true
+  ignore_errors: true
+  register: pikvm_update_script_output
+  when:
+    - pikvm_update_script_exists is defined
+    - pikvm_update_script_exists.stat.exists
+
+- name: Display update results
+  ansible.builtin.debug:
+    msg: "{{ pikvm_update_script_output.stdout_lines }}"
+  when:
+    - pikvm_update_script_exists is defined
+    - pikvm_update_script_exists.stat.exists
+    - pikvm_update_script_output is defined
+
+- name: Wait for the PiKVM to finish any needed reboot
+  ansible.builtin.wait_for_connection:
+    connect_timeout: 5
+    sleep: 1
+    timeout: 60
+  vars:
+    ansible_remote_tmp: /tmp
+  when:
+    - pikvm_update_script_exists is defined
+    - pikvm_update_script_exists.stat.exists
+    - pikvm_update_script_output is defined

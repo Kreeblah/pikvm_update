@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  role_name: pikvm_update
+  author: Chris Gelatt
+  description: Update PiKVM systems
+
+  license: GPL-3.0-or-later
+
+  min_ansible_version: "2.17"
+
+  galaxy_tags:
+    - pikvm
+    - update
+
+dependencies: []

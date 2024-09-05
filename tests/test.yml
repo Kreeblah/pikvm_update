@@ -1,0 +1,6 @@
+---
+- name: Test pikvm_update role
+  hosts: pikvm
+  remote_user: root
+  roles:
+    - pikvm_update
